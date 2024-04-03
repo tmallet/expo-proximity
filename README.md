@@ -31,7 +31,7 @@ Run `npx pod-install` after installing the npm package.
 # Usage
 
 ```ts
-const proximityState = useProximityState();
+const proximityState: boolean = useProximityState();
 ```
 
 # Contributing
