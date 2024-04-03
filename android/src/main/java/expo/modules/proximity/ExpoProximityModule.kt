@@ -1,47 +1,87 @@
 package expo.modules.proximity
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
-class ExpoProximityModule : Module() {
-  // Each module class must implement the definition function. The definition consists of components
-  // that describes the module's functionality and behavior.
-  // See https://docs.expo.dev/modules/module-api for more details about available components.
-  override fun definition() = ModuleDefinition {
-    // Sets the name of the module that JavaScript code will use to refer to the module. Takes a string as an argument.
-    // Can be inferred from module's class name, but it's recommended to set it explicitly for clarity.
-    // The module will be accessible from `requireNativeModule('ExpoProximity')` in JavaScript.
-    Name("ExpoProximity")
+internal const val PROXIMITY_STATE_EVENT_NAME = "Expo.proximityStateDidChange"
 
-    // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
-    Constants(
-      "PI" to Math.PI
-    )
+class ExpoProximityModule : Module(), SensorEventListener {
 
-    // Defines event names that the module can send to JavaScript.
-    Events("onChange")
+    private var lastFarTime: Double = 0.0
+    private var lastReading: Double = 0.0
+    private var lastCloseTime: Double = 0.0
+    private var isClose: Boolean = false
+    private var hasListener: Boolean = false
 
-    // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
-    Function("hello") {
-      "Hello world! 👋"
+    override fun definition() = ModuleDefinition {
+        Name("ExpoProximity")
+
+        Events(PROXIMITY_STATE_EVENT_NAME)
+
+        AsyncFunction("setValueAsync") { value: String ->
+            sendEvent("onChange", mapOf("value" to value))
+        }
+
+        AsyncFunction<Boolean>("isAvailableAsync") {
+            val sensorManager = appContext.reactContext?.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+            sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY) != null
+        }
+
+        OnStartObserving {
+            val sensorManager = appContext.reactContext?.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+            val sensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            sensorManager?.registerListener(this@ExpoProximityModule, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+
+        OnStopObserving {
+            val sensorManager = appContext.reactContext?.getSystemService(Context.SENSOR_SERVICE) as? SensorManager
+            val sensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            sensorManager?.unregisterListener(this@ExpoProximityModule, sensor)
+        }
+
+        Function("setHasListener") { value: Boolean ->
+            hasListener = value
+        }
+
+        AsyncFunction<Boolean>("getProximityStateAsync") {
+            isClose
+        }
     }
 
-    // Defines a JavaScript function that always returns a Promise and whose native code
-    // is by default dispatched on the different thread than the JavaScript runtime runs on.
-    AsyncFunction("setValueAsync") { value: String ->
-      // Send an event to JavaScript.
-      sendEvent("onChange", mapOf(
-        "value" to value
-      ))
+    override fun onSensorChanged(sensorEvent: SensorEvent?) {
+        if (!hasListener) {
+            return
+        }
+        val tempMs = System.currentTimeMillis().toDouble()
+        if (tempMs - lastReading >= SensorManager.SENSOR_DELAY_NORMAL) {
+            lastReading = tempMs
+            val distance: Float? = sensorEvent?.values?.get(0)
+            if (distance != null && distance <= 3) {
+                if (tempMs - lastCloseTime >= 500) {
+                    if (!isClose) {
+                        isClose = true
+                    }
+                    lastCloseTime = tempMs
+                }
+            } else {
+                if (tempMs - lastFarTime >= 500) {
+                    if (isClose) {
+                        isClose = false
+                    }
+                    lastFarTime = tempMs
+                }
+            }
+            sendEvent(PROXIMITY_STATE_EVENT_NAME, mapOf("proximityState" to isClose))
+        }
+
     }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of
-    // the view definition: Prop, Events.
-    View(ExpoProximityView::class) {
-      // Defines a setter for the `name` prop.
-      Prop("name") { view: ExpoProximityView, prop: String ->
-        println(prop)
-      }
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
     }
-  }
 }
