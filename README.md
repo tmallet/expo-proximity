@@ -28,7 +28,11 @@ Run `npx pod-install` after installing the npm package.
 
 ### Configure for Android
 
+# Usage
 
+```ts
+const proximityState = useProximityState();
+```
 
 # Contributing
 
