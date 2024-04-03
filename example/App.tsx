@@ -1,9 +1,9 @@
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 
-import * as ExpoProximity from 'expo-proximity'
+import { useProximityState } from 'expo-proximity'
 
 export default function App() {
-  const proximityState = ExpoProximity.useProximityState()
+  const proximityState = useProximityState()
 
   return (
     <View style={styles.container}>
