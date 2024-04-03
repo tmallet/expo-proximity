@@ -1,26 +1,34 @@
-import { NativeModulesProxy, EventEmitter, Subscription } from 'expo-modules-core';
+import { NativeModulesProxy, EventEmitter, Subscription } from 'expo-modules-core'
 
-// Import the native module. On web, it will be resolved to ExpoProximity.web.ts
-// and on native platforms to ExpoProximity.ts
-import ExpoProximityModule from './ExpoProximityModule';
-import ExpoProximityView from './ExpoProximityView';
-import { ChangeEventPayload, ExpoProximityViewProps } from './ExpoProximity.types';
+import ExpoProximityModule from './ExpoProximityModule'
 
-// Get the native constant value.
-export const PI = ExpoProximityModule.PI;
+import { ProximityStateEvent } from './ExpoProximity.types'
+import { useEffect, useState } from 'react'
 
-export function hello(): string {
-  return ExpoProximityModule.hello();
+const ProximityEventEmitter = new EventEmitter(ExpoProximityModule)
+
+export async function isAvailableAsync(): Promise<boolean> {
+  return Promise.resolve((ExpoProximityModule && ExpoProximityModule.isSupported) || false)
 }
 
-export async function setValueAsync(value: string) {
-  return await ExpoProximityModule.setValueAsync(value);
+export async function getProximityStateAsync(): Promise<boolean> {
+  if (!ExpoProximityModule.getProximityStateAsync) {
+    return false
+  }
+  return await ExpoProximityModule.getProximityStateAsync()
 }
 
-const emitter = new EventEmitter(ExpoProximityModule ?? NativeModulesProxy.ExpoProximity);
-
-export function addChangeListener(listener: (event: ChangeEventPayload) => void): Subscription {
-  return emitter.addListener<ChangeEventPayload>('onChange', listener);
+export function addProximityStateListener(listener: (event: ProximityStateEvent) => void): Subscription {
+  return ProximityEventEmitter.addListener('Expo.proximityStateDidChange', listener)
 }
 
-export { ExpoProximityView, ExpoProximityViewProps, ChangeEventPayload };
+export function useProximityState(): boolean {
+  const [proximityState, setProximityState] = useState(false)
+
+  useEffect(() => {
+    const listener = addProximityStateListener((event) => setProximityState(event.proximityState))
+    return () => listener.remove()
+  }, [])
+
+  return proximityState
+}

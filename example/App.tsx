@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native'
 
-import * as ExpoProximity from 'expo-proximity';
+import * as ExpoProximity from 'expo-proximity'
 
 export default function App() {
+  const proximityState = ExpoProximity.useProximityState()
+
   return (
     <View style={styles.container}>
-      <Text>{ExpoProximity.hello()}</Text>
+      <Text>Proximity: {String(proximityState)}</Text>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -17,4 +19,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})

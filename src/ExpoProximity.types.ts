@@ -1,7 +1,3 @@
-export type ChangeEventPayload = {
-  value: string;
-};
-
-export type ExpoProximityViewProps = {
-  name: string;
-};
+export type ProximityStateEvent = {
+  proximityState: boolean
+}
