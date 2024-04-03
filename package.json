@@ -1,0 +1,42 @@
+{
+  "name": "expo-proximity",
+  "version": "0.1.0",
+  "description": "Provides access to the system's proximity sensor.",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "expo-module build",
+    "clean": "expo-module clean",
+    "lint": "expo-module lint",
+    "test": "expo-module test",
+    "prepare": "expo-module prepare",
+    "prepublishOnly": "expo-module prepublishOnly",
+    "expo-module": "expo-module",
+    "open:ios": "open -a \"Xcode\" example/ios",
+    "open:android": "open -a \"Android Studio\" example/android"
+  },
+  "keywords": [
+    "react-native",
+    "expo",
+    "expo-proximity",
+    "ExpoProximity"
+  ],
+  "repository": "https://github.com/tmallet/expo-proximity",
+  "bugs": {
+    "url": "https://github.com/tmallet/expo-proximity/issues"
+  },
+  "author": "Thibaut Mallet <tmallet@noesio.fr> (https://github.com/tmallet)",
+  "license": "MIT",
+  "homepage": "https://github.com/tmallet/expo-proximity#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/react": "^18.0.25",
+    "expo-module-scripts": "^3.4.1",
+    "expo-modules-core": "^1.11.12"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
+  }
+}
