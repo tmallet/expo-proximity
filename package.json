@@ -1,6 +1,6 @@
 {
   "name": "expo-proximity",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Provides access to the system's proximity sensor.",
   "main": "build/index.js",
   "types": "build/index.d.ts",
