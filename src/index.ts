@@ -32,6 +32,20 @@ export function addProximityStateListener(
   return ExpoProximityModule.addListener('onProximityStateChange', listener)
 }
 
+export function deactivate(): Promise<void> {
+  if (!ExpoProximityModule.deactivate) {
+    return Promise.resolve()
+  }
+  return ExpoProximityModule.deactivate()
+}
+
+export function activate(): Promise<void> {
+  if (!ExpoProximityModule.activate) {
+    return Promise.resolve()
+  }
+  return ExpoProximityModule.activate()
+}
+
 export function useProximity(): UseProximity {
   const [proximityState, setProximityState] = useState(getProximityState())
   const [isActivatedState, setIsActivatedState] = useState(isActivated())
@@ -52,18 +66,4 @@ export function useProximity(): UseProximity {
   }, [])
 
   return { proximityState, isActivated: isActivatedState }
-}
-
-export function deactivate(): Promise<void> {
-  if (!ExpoProximityModule.deactivate) {
-    return Promise.resolve()
-  }
-  return ExpoProximityModule.deactivate()
-}
-
-export function activate(): Promise<void> {
-  if (!ExpoProximityModule.activate) {
-    return Promise.resolve()
-  }
-  return ExpoProximityModule.activate()
 }
