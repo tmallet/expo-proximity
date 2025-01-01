@@ -1,6 +1,7 @@
 import ExpoModulesCore
 
 let proximityStateDidChange: String = "onProximityStateChange"
+let proximitySensorActivationDidChange: String = "onProximitySensorActivationChange"
 
 public class ExpoProximityModule: Module {
     public func definition() -> ModuleDefinition {
@@ -11,9 +12,40 @@ public class ExpoProximityModule: Module {
         ])
         
         Events(proximityStateDidChange)
+        Events(proximitySensorActivationDidChange)
         
-        AsyncFunction("getProximityStateAsync") { () -> Bool in
+        Function("getProximityState") { () -> Bool in
             return UIDevice.current.proximityState
+        }
+        
+        Function("isActivated") { () -> Bool in
+            return DispatchQueue.main.sync {
+                return UIDevice.current.isProximityMonitoringEnabled
+            }
+        }
+        
+        AsyncFunction("deactivate") { () -> Void in
+            if(isSupported()){
+                return DispatchQueue.main.async {
+                    NotificationCenter.default.removeObserver(self, name: UIDevice.proximityStateDidChangeNotification, object: nil)
+                    UIDevice.current.isProximityMonitoringEnabled = false
+                    self.sendEvent(proximitySensorActivationDidChange, [
+                        "isActivated": false
+                    ])
+                }
+            }
+        }
+        
+        AsyncFunction("activate") { () -> Void in
+            if(isSupported()){
+                return DispatchQueue.main.async {
+                    NotificationCenter.default.addObserver(self, selector: #selector(self.proximityStateListener), name: UIDevice.proximityStateDidChangeNotification, object: nil)
+                    UIDevice.current.isProximityMonitoringEnabled = true
+                    self.sendEvent(proximitySensorActivationDidChange, [
+                        "isActivated": true
+                    ])
+                }
+            }
         }
         
         OnCreate {

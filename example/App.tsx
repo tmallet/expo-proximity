@@ -1,10 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Button, StyleSheet, Text, View } from 'react-native'
 
-import { addProximityStateListener, isAvailableAsync, useProximityState } from 'expo-proximity'
+import {
+  addProximityStateListener,
+  deactivate,
+  activate,
+  isAvailableAsync,
+  useProximity,
+  isActivated,
+} from 'expo-proximity'
 import { useEffect, useState } from 'react'
 
 export default function App() {
-  const proximityState = useProximityState()
+  const { proximityState, isActivated: isSensorActivated } = useProximity()
   const [isAvailable, setIsAvailable] = useState(false)
 
   useEffect(() => {
@@ -19,6 +26,10 @@ export default function App() {
     <View style={styles.container}>
       <Text>Proximity state: {String(proximityState)}</Text>
       <Text>Proximity sensor available: {String(isAvailable)}</Text>
+      <Text>Proximity sensor activated: {String(isSensorActivated)}</Text>
+      <Button onPress={() => deactivate()} title="Deactivate sensor" />
+      <Button onPress={() => activate()} title="Activate sensor" />
+      <Button onPress={() => alert(isActivated())} title="Alert proximity sensor activation" />
     </View>
   )
 }
