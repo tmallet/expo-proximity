@@ -31,9 +31,10 @@
   "homepage": "https://github.com/tmallet/expo-proximity#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/react": "^18.0.25",
-    "expo-module-scripts": "^3.4.1",
-    "expo-modules-core": "^1.11.12",
+    "@types/react": "~18.3.12",
+    "expo-module-scripts": "^4.0.2",
+    "expo": "~52.0.0",
+    "react-native": "0.76.0",
     "prettier": "^3.2.5"
   },
   "peerDependencies": {

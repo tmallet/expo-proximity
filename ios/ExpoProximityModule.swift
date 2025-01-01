@@ -1,6 +1,6 @@
 import ExpoModulesCore
 
-let proximityStateDidChange: String = "Expo.proximityStateDidChange"
+let proximityStateDidChange: String = "onProximityStateChange"
 
 public class ExpoProximityModule: Module {
     public func definition() -> ModuleDefinition {

@@ -1,16 +1,12 @@
-import { EventEmitter, Platform, Subscription } from 'expo-modules-core'
-
-import ExpoProximityModule from './ExpoProximityModule'
-
-import { ProximityStateEvent } from './ExpoProximity.types'
 import { useEffect, useState } from 'react'
-
-const ProximityEventEmitter = new EventEmitter(ExpoProximityModule)
+import ExpoProximityModule from './ExpoProximityModule'
+import { type NativeEventSubscription, Platform } from 'react-native'
+import type { ProximityStateChangeEvent } from './ExpoProximity.types'
 
 export async function isAvailableAsync(): Promise<boolean> {
   return Platform.OS === 'android'
     ? ExpoProximityModule.isAvailableAsync()
-    : Promise.resolve((ExpoProximityModule && ExpoProximityModule.isSupported) || false)
+    : Promise.resolve(ExpoProximityModule?.isSupported ?? false)
 }
 
 export async function getProximityStateAsync(): Promise<boolean> {
@@ -20,11 +16,13 @@ export async function getProximityStateAsync(): Promise<boolean> {
   return await ExpoProximityModule.getProximityStateAsync()
 }
 
-export function addProximityStateListener(listener: (event: ProximityStateEvent) => void): Subscription {
+export function addProximityStateListener(
+  listener: (event: ProximityStateChangeEvent) => void
+): NativeEventSubscription {
   if (Platform.OS === 'android') {
     ExpoProximityModule.setHasListener(true)
   }
-  return ProximityEventEmitter.addListener('Expo.proximityStateDidChange', listener)
+  return ExpoProximityModule.addListener('onProximityStateChange', listener)
 }
 
 export function useProximityState(): boolean {

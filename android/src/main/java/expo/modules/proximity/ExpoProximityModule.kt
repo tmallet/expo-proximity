@@ -8,7 +8,7 @@ import android.hardware.SensorManager
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
-internal const val PROXIMITY_STATE_EVENT_NAME = "Expo.proximityStateDidChange"
+internal const val PROXIMITY_STATE_EVENT_NAME = "onProximityStateChange"
 
 class ExpoProximityModule : Module(), SensorEventListener {
 
