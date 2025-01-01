@@ -31,11 +31,59 @@ Run `npx pod-install` after installing the npm package.
 
 ### Configure for Android
 
-# Usage
+# API
 
 ```ts
-const proximityState: boolean = useProximityState()
+import {
+  isAvailableAsync,
+  getProximityState,
+  isActivated,
+  addProximityStateListener,
+  deactivate,
+  activate,
+  useProximity,
+} from 'expo-proximity'
 ```
+
+# Hooks
+
+### `useProximity()`
+
+```ts
+const { proximityState, isActivated } = useProximity()
+```
+
+# Methods
+
+### `getProximityState()`
+
+Get if an object is near the sensor or not.
+
+Returns: `boolean`
+
+### `isActivated()`
+
+Get if the sensor is activated or not.
+
+Returns: `boolean`
+
+### `addProximityStateListener(listener: (event: ProximityStateChangeEvent) => void)`
+
+Method to add a listener on proximity state change event.
+
+Returns: `NativeEventSubscription`
+
+### `deactivate()`
+
+Method to deactivate the sensor.
+
+Returns: `Promise<void>`
+
+### `activate()`
+
+Method to activate the sensor.
+
+Returns: `Promise<void>`
 
 # Contributing
 
