@@ -55,9 +55,15 @@ export function useProximity(): UseProximity {
 }
 
 export function deactivate(): Promise<void> {
+  if (!ExpoProximityModule.deactivate) {
+    return Promise.resolve()
+  }
   return ExpoProximityModule.deactivate()
 }
 
 export function activate(): Promise<void> {
+  if (!ExpoProximityModule.activate) {
+    return Promise.resolve()
+  }
   return ExpoProximityModule.activate()
 }
