@@ -9,6 +9,8 @@ Provides access to the system's proximity sensor.
 
 # Installation in managed Expo projects
 
+For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, run following command:
+
 ```
 npx expo install expo-proximity
 ```
