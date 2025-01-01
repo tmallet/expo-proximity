@@ -9,7 +9,11 @@ Provides access to the system's proximity sensor.
 
 # Installation in managed Expo projects
 
-For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, please follow the installation instructions in the [API documentation for the latest stable release](#api-documentation). If you follow the link and there is no documentation available then this library is not yet usable within managed projects &mdash; it is likely to be included in an upcoming Expo SDK release.
+For [managed](https://docs.expo.dev/archive/managed-vs-bare/) Expo projects, run following command:
+
+```
+npx expo install expo-proximity
+```
 
 # Installation in bare React Native projects
 
@@ -25,15 +29,62 @@ npm install expo-proximity
 
 Run `npx pod-install` after installing the npm package.
 
-
 ### Configure for Android
 
-# Usage
+# API
 
 ```ts
-const proximityState: boolean = useProximityState();
+import {
+  isAvailableAsync,
+  getProximityState,
+  isActivated,
+  addProximityStateListener,
+  deactivate,
+  activate,
+  useProximity,
+} from 'expo-proximity'
 ```
+
+# Hooks
+
+### `useProximity()`
+
+```ts
+const { proximityState, isActivated } = useProximity()
+```
+
+# Methods
+
+### `getProximityState()`
+
+Get if an object is near the sensor or not.
+
+Returns: `boolean`
+
+### `isActivated()`
+
+Get if the sensor is activated or not.
+
+Returns: `boolean`
+
+### `addProximityStateListener(listener: (event: ProximityStateChangeEvent) => void)`
+
+Method to add a listener on proximity state change event.
+
+Returns: `NativeEventSubscription`
+
+### `deactivate()`
+
+Method to deactivate the sensor.
+
+Returns: `Promise<void>`
+
+### `activate()`
+
+Method to activate the sensor.
+
+Returns: `Promise<void>`
 
 # Contributing
 
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).
+Contributions are very welcome! Please refer to guidelines described in the [contributing guide](https://github.com/expo/expo#contributing).

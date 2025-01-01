@@ -1,6 +1,6 @@
 {
   "platforms": ["ios", "tvos", "android", "web"],
-  "ios": {
+  "apple": {
     "modules": ["ExpoProximityModule"]
   },
   "android": {
